@@ -22,6 +22,7 @@ namespace Gema
 		std::string						_fragment_source;
 		bool							_is_load = false;
 		std::map<std::string, uint8_t>	_bind_locations;
+		std::map<std::string, GLint>	_uniform_locations;
 
 		static char		*_get_error(GLuint &shader, GLenum type, bool isProgram = false) noexcept;
 		static bool		_compile(GLuint &shader, GLenum type, const std::string& source) noexcept;
@@ -42,6 +43,15 @@ namespace Gema
 			if (it != this->_bind_locations.end())
 				return (it->second);
 			throw "Unable to find location";
+		}
+
+		inline GLint 	uniformLocation(const std::string& name) noexcept {
+			auto it = this->_uniform_locations.find(name);
+			if (it != this->_uniform_locations.end())
+				return (it->second);
+			GLint loc = glGetUniformLocation(this->_program_id, name.c_str());
+			this->_uniform_locations[name] = loc;
+			return (loc);
 		}
 
 		inline bool		isLoad() const noexcept {
