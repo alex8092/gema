@@ -20,7 +20,7 @@ bool	Engine::init(const std::string& appName) noexcept
 		this->_input.setCursorVisible(false);
 		this->_input.setGrabCursor();
 		this->_win->centerCursor();
-		this->_win->setFullscreen();
+		// this->_win->setFullscreen();
 	}
 	return (true);
 }

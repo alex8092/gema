@@ -3,8 +3,8 @@
 
 # include <stdint.h>
 # include <SDL2/SDL.h>
-# define GL3_PROTOTYPE
 # include <GL/glew.h>
+# define GL3_PROTOTYPES 1
 # include <GL/gl.h>
 
 namespace Gema
@@ -14,6 +14,7 @@ namespace Gema
 	class Renderer
 	{
 	private:
+		static bool	_glew_init;
 		Engine		*_engine = nullptr;
 		uint32_t	_width = 800;
 		uint32_t	_height = 600;
