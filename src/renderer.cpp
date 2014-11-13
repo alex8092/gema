@@ -3,6 +3,7 @@
 #include "shader.h"
 #include "mat4.h"
 #include "vec3.h"
+#include "mesh.h"
 #include <iostream>
 
 using Gema::Renderer;
@@ -11,6 +12,7 @@ using Gema::Engine;
 using Gema::Shader;
 using Gema::mat4;
 using Gema::vec3;
+using Gema::Mesh;
 
 bool	Renderer::_glew_init = false;
 
@@ -71,6 +73,7 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 	static Shader	shad("Shaders/basic_vs.glsl", "Shaders/basic_fs.glsl");
 	static mat4		modelview, projection;
 	static float 	ang = 0.001;
+	static Mesh		mesh;
 
 	if (!shad.isLoad())
 	{
@@ -78,16 +81,22 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 		if (!shad.load())
 			return (false);
 		projection.perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
+		mesh.vertices().push_back(vec3(-0.5, 0, 0.5));
+		mesh.vertices().push_back(vec3(0, 0.5, 0));
+		mesh.vertices().push_back(vec3(0.5, 0, -0.5));
+		mesh.indices().push_back(0);
+		mesh.indices().push_back(1);
+		mesh.indices().push_back(2);
 	}
 	modelview.lookAt(vec3(3, 0, 3), vec3(0, 0, 0), vec3(0, 1, 0));
-	modelview.rotate(vec3(0, 1, 0), ang);
+	// modelview.rotate(vec3(0, 1, 0), ang);
 	ang += 0.01;
 	if (ang > 3.14)
 		ang = 0.01;
 
-	mat4 trans;
-	trans.translate(vec3(0, ang * -1, 0));
-	modelview *= trans;
+	// mat4 trans;
+	// trans.translate(vec3(0, ang * -1, 0));
+	// modelview *= trans;
 
 	// glm::mat4 	proj = (glm::mat4)glm::perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
 	// mod = (glm::mat4)glm::translate(mod, glm::vec3(2, 0, 0));
@@ -105,10 +114,11 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 	glUseProgram(shad.id());
 	glUniformMatrix4fv(shad.uniformLocation("projection"), 1, GL_FALSE, projection.values());
 	glUniformMatrix4fv(shad.uniformLocation("modelview"), 1, GL_FALSE, modelview.values());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(0);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glDisableVertexAttribArray(0);
+	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+	// glEnableVertexAttribArray(0);
+	// glDrawArrays(GL_TRIANGLES, 0, 3);
+	// glDisableVertexAttribArray(0);
+	mesh.draw();
 	glUseProgram(0);
 	// glDisableVertexAttribArray(1);
 	// glBindBuffer(GL_ARRAY_BUFFER, 0);
