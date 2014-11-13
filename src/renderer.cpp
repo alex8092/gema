@@ -20,6 +20,10 @@ Renderer::Renderer(Engine *engine) noexcept :
 
 }
 
+Renderer::~Renderer()
+{
+}
+
 void	Renderer::init() const noexcept
 {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, this->_major_version);
