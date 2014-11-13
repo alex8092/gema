@@ -30,6 +30,9 @@ void	Renderer::init() const noexcept
 {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, this->_major_version);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, this->_minor_version);
+#ifdef __APPLE__
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+#endif
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, (this->_double_buffer) ? 1 : 0);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, this->_depth);
 }

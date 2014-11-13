@@ -5,7 +5,13 @@
 # include <SDL2/SDL.h>
 # include <GL/glew.h>
 # define GL3_PROTOTYPES 1
-# include <GL/gl.h>
+
+# ifdef __APPLE__
+#  include <OpenGL/gl.h>
+# else
+#  include <GL/gl.h>
+# endif
+
 # include "scene.h"
 
 namespace Gema
