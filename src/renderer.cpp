@@ -11,6 +11,7 @@ Renderer::Renderer(Engine *engine) noexcept :
 
 void	Renderer::init() const noexcept
 {
+	glewInit();
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, this->_major_version);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, this->_minor_version);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, (this->_double_buffer) ? 1 : 0);

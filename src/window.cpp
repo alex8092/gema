@@ -30,6 +30,7 @@ bool	Window::_init_sdl() noexcept
 		this->_engine->setError(SDL_GetError());
 		return (false);
 	}
+	this->_engine->render()->init();
 	return (true);
 }
 
@@ -99,4 +100,9 @@ bool	Window::isCenteredCursor(int16_t x, int16_t y) const noexcept
 bool	Window::update() noexcept
 {
 	return (this->_engine->render()->renderFrame(this->_win));
+}
+
+void	Window::setFullscreen(bool full) const noexcept
+{
+	SDL_SetWindowFullscreen(this->_win, (full) ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 }

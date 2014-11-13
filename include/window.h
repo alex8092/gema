@@ -38,6 +38,8 @@ namespace Gema
 
 		bool		update() noexcept;
 
+		void		setFullscreen(bool full = true) const noexcept;
+
 		inline bool	isClose() const noexcept {
 			return (this->_win == nullptr);
 		}
