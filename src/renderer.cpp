@@ -67,12 +67,6 @@ void			Renderer::destroyContext(SDL_GLContext context) const noexcept
 
 bool			Renderer::renderFrame(SDL_Window *win) noexcept
 {
-	static float vertices[] =
-	{
-		-0.5, 0, 0.5,
-		0, 0.5, 0,
-		0.5, 0, -0.5
-	};
 	static Shader	shad("Shaders/basic_vs.glsl", "Shaders/basic_fs.glsl");
 	static mat4		modelview, projection;
 	static float 	ang = 0.001;

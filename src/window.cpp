@@ -94,7 +94,7 @@ void	Window::centerCursor() const noexcept
 
 bool	Window::isCenteredCursor(int16_t x, int16_t y) const noexcept
 {
-	return (x == this->_engine->render()->width() / 2 && y == this->_engine->render()->height() / 2);
+	return (x == (int16_t)this->_engine->render()->width() / 2 && y == (int16_t)this->_engine->render()->height() / 2);
 }
 
 bool	Window::update() noexcept

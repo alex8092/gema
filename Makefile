@@ -11,7 +11,7 @@ ifeq ($(UNAME_S),Darwin)
 	LDFLAGS = -L/usr/local/Cellar/sdl2/2.0.3/lib -L/usr/local/Cellar/glfw3/3.0.4/lib -L/usr/local/Cellar/glew/1.11.0/lib -lsdl2 -framework OpenGL -lglfw3 -lglew
 else
 	CXX = g++-4.8
-	LDFLAGS = -lsdl2 -lglew -lgl
+	LDFLAGS = -lSDL2 -lGLEW -lGL
 endif
 
 DEBUG	=	true

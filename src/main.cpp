@@ -26,6 +26,7 @@ public:
 	}
 	virtual bool onKeyReleased(SDL_Scancode code) noexcept
 	{
+		(void)code;
 		return (true);
 	}
 };

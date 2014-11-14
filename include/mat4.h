@@ -32,7 +32,7 @@ namespace Gema
 		mat4 						&rotate(const vec3& axis, float theta) noexcept;
 		mat4						&scale(const vec3& datas) noexcept;
 
-		inline const float	* const values() const noexcept {
+		inline const float			*values() const noexcept {
 			return (this->_values);
 		}
 		inline float&				operator[](int index) noexcept {

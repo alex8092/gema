@@ -27,7 +27,6 @@ bool	Engine::init(const std::string& appName) noexcept
 
 bool	Engine::start() noexcept
 {
-	SDL_Event ev;
 	while (!this->_win->isClose())
 	{
 		if (!this->_input.capture() || !this->_win->update())

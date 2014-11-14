@@ -24,6 +24,7 @@ mat4	&mat4::operator=(const mat4& mat) noexcept
 {
 	for (int i = 0; i < 16; ++i)
 		this->_values[i] = mat._values[i];
+	return (*this);
 }
 
 mat4	&mat4::identity() noexcept
