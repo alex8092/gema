@@ -13,6 +13,7 @@
 # endif
 
 # include "scene.h"
+# include "camera.h"
 
 namespace Gema
 {
@@ -30,6 +31,9 @@ namespace Gema
 		uint32_t						_depth = 24;
 		bool							_double_buffer = true;
 		Scene							_scene;
+		Camera							_cam;
+		uint32_t						_last_ticks = 0;
+		uint32_t						_diff_time = 0;
 
 	public:
 		explicit 		Renderer(Engine *engine) noexcept;
@@ -51,6 +55,13 @@ namespace Gema
 
 		inline Scene	*scene() noexcept {
 			return (&this->_scene);
+		}
+		inline Camera	*camera() noexcept {
+			return (&this->_cam);
+		}
+
+		inline uint32_t	DiffSinceLastFrame() const noexcept {
+			return (this->_diff_time);
 		}
 	};
 }

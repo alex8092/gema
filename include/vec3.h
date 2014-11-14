@@ -30,6 +30,18 @@ namespace Gema
 			return (this->_z);
 		}
 
+		inline float&	x() noexcept {
+			return (this->_x);
+		}
+
+		inline float&	y() noexcept {
+			return (this->_y);
+		}
+
+		inline float&	z() noexcept {
+			return (this->_z);
+		}
+
 		inline double	magnitude() const noexcept {
 			return (sqrt(this->_x * this->_x + this->_y * this->_y + this->_z * this->_z));
 		}
@@ -47,6 +59,10 @@ namespace Gema
 
 		inline vec3				add(const vec3& vec) const noexcept {
 			return vec3(this->_x + vec._x, this->_y + vec._y, this->_z + vec._z);
+		}
+
+		inline vec3 			mul(float n) const noexcept {
+			return vec3(this->_x * n, this->_y * n, this->_z * n);
 		}
 
 		inline double			dot(const vec3& vec) const noexcept {

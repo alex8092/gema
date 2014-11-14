@@ -72,6 +72,10 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 	static float 	ang = 0.001;
 	static Mesh		mesh;
 
+	uint32_t		current = SDL_GetTicks();
+	this->_diff_time = current - this->_last_ticks;
+	this->_last_ticks = current;
+
 	if (!shad.isLoad())
 	{
 		shad.setLocation(0, "position");
@@ -85,7 +89,8 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 		mesh.indices().push_back(1);
 		mesh.indices().push_back(2);
 	}
-	modelview.lookAt(vec3(3, 0, 3), vec3(0, 0, 0), vec3(0, 1, 0));
+	this->_cam.update();
+	modelview.lookAt(this->_cam.position(), this->_cam.target(), this->_cam.up());
 	// modelview.rotate(vec3(0, 1, 0), ang);
 	ang += 0.01;
 	if (ang > 3.14)

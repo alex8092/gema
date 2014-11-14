@@ -21,6 +21,7 @@ bool	Engine::init(const std::string& appName) noexcept
 		this->_input.setGrabCursor();
 		this->_win->centerCursor();
 		// this->_win->setFullscreen();
+		this->_input.addListener(this->_render.camera());
 	}
 	return (true);
 }
