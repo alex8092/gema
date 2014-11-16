@@ -1,8 +1,10 @@
 #include "resourcesmanager.h"
 #include "mesh.h"
+#include "parser3ds.h"
 
 using Gema::ResourcesManager;
 using Gema::Mesh;
+using Gema::Parser3DS;
 
 ResourcesManager 	ResourcesManager::_singleton;
 
@@ -93,95 +95,97 @@ bool	ResourcesManager::load() noexcept
 		}
 		else if (str.substr(str.length() - 4) == ".3ds")
 		{
-			std::ifstream ifs(str.c_str(), std::ios::binary);
-			ifs.seekg(0, ifs.end);
-			int len = ifs.tellg();
-			ifs.seekg(0, ifs.beg);
-			char *buffer = new char[len];
-			ifs.read(buffer, len);
-			struct chuck {
-				uint16_t id;
-				uint32_t size;
-			} __attribute__((packed));
-			chuck *c = (chuck*)buffer;
-			int index = 0;
-			while (index < len)
-			{
-				int saveIndex = index;
-				c = ResourcesManager::_read_struct<chuck>(buffer, index);
-				int size = c->size;
-				std::cout << "#Chuck" << std::endl;
-				std::cout << "\tid : " << std::hex << c->id << std::dec << std::endl;
-				std::cout << "\tsize : " << c->size << std::endl;
-				chuck *c2 = ResourcesManager::_read_struct<chuck>(buffer, index);
-				std::cout << "\t#Chuck" << std::endl;
-				std::cout << "\t\tid : " << std::hex << c2->id << std::dec << std::endl;
-				std::cout << "\t\tsize : " << c2->size << std::endl;
-				index += c2->size - sizeof(chuck);
-				chuck *c3 = ResourcesManager::_read_struct<chuck>(buffer, index);
-				std::cout << "\t#Chuck" << std::endl;
-				std::cout << "\t\tid : " << std::hex << c3->id << std::dec << std::endl;
-				std::cout << "\t\tsize : " << c3->size << std::endl;
-				chuck *c4 = ResourcesManager::_read_struct<chuck>(buffer, index);
-				std::cout << "\t\t#Chuck" << std::endl;
-				std::cout << "\t\t\tid : " << std::hex << c4->id << std::dec << std::endl;
-				std::cout << "\t\t\tsize : " << c4->size << std::endl;
-				index += c4->size - sizeof(chuck);
-				chuck *c5 = ResourcesManager::_read_struct<chuck>(buffer, index);
-				std::cout << "\t\t#Chuck" << std::endl;
-				std::cout << "\t\t\tid : " << std::hex << c5->id << std::dec << std::endl;
-				std::cout << "\t\t\tsize : " << c5->size << std::endl;
-				int i = index;
-				for (; i < len; ++i) {
-					if (buffer[i] == 0)
-						break ;
-				}
-				std::string name(buffer + index, i - index);
-				Mesh *m = new Mesh();
-				std::cout << "name : \"" << name << "\"" << std::endl;
-				Mesh::registerMesh(name, m);
-				std::cout << "\t\t\tobject name : " << name << std::endl;
-				index = i + 1;
-				chuck *c6 = ResourcesManager::_read_struct<chuck>(buffer, index);
-				std::cout << "\t\t\t#Chuck" << std::endl;
-				std::cout << "\t\t\t\tid : " << std::hex << c6->id << std::dec << std::endl;
-				std::cout << "\t\t\t\tsize : " << c6->size << std::endl;
-				chuck *c7 = ResourcesManager::_read_struct<chuck>(buffer, index);
-				std::cout << "\t\t\t\t#Chuck" << std::endl;
-				std::cout << "\t\t\t\t\tid : " << std::hex << c7->id << std::dec << std::endl;
-				std::cout << "\t\t\t\t\tsize : " << c7->size << std::endl;
-				uint16_t nbVertices = ResourcesManager::_read<uint16_t>(buffer, index);
-				std::cout << "\t\t\t\t\t\tnb vertices : " << nbVertices << std::endl;
-				for (uint16_t j = 0; j < nbVertices; ++j)
-				{
-					float	x = ResourcesManager::_read<float>(buffer, index);
-					float	y = ResourcesManager::_read<float>(buffer, index);
-					float	z = ResourcesManager::_read<float>(buffer, index);
-					m->vertices().push_back(vec3(x, y, z));
-					std::cout << "\t\t\t\t\t\tV (" << x << ", " << y << ", " << z << ")" << std::endl;
-				}
-				chuck *c8 = ResourcesManager::_read_struct<chuck>(buffer, index);
-				std::cout << "\t\t\t\t#Chuck" << std::endl;
-				std::cout << "\t\t\t\t\tid : " << std::hex << c8->id << std::dec << std::endl;
-				std::cout << "\t\t\t\t\tsize : " << c8->size << std::endl;
-				uint16_t nbPolygon = ResourcesManager::_read<uint16_t>(buffer, index);
-				std::cout << "\t\t\t\t\t\tnb poly : " << nbPolygon << std::endl;
-				for (uint16_t j = 0; j < nbPolygon; ++j)
-				{
-					uint16_t vA = ResourcesManager::_read<uint16_t>(buffer, index);
-					uint16_t vB = ResourcesManager::_read<uint16_t>(buffer, index);
-					uint16_t vC = ResourcesManager::_read<uint16_t>(buffer, index);
-					m->indices().push_back(vA);
-					m->indices().push_back(vB);
-					m->indices().push_back(vC);
-					uint16_t faceInto = ResourcesManager::_read<uint16_t>(buffer, index);
-					std::cout << "\t\t\t\t\t\tF (" << vA << ", " << vB << ", " << vC << ") - into : " << faceInto << std::endl;
-				}
+			Parser3DS parse;
+			parse.load(str.c_str());
+			// std::ifstream ifs(str.c_str(), std::ios::binary);
+			// ifs.seekg(0, ifs.end);
+			// int len = ifs.tellg();
+			// ifs.seekg(0, ifs.beg);
+			// char *buffer = new char[len];
+			// ifs.read(buffer, len);
+			// struct chuck {
+			// 	uint16_t id;
+			// 	uint32_t size;
+			// } __attribute__((packed));
+			// chuck *c = (chuck*)buffer;
+			// int index = 0;
+			// while (index < len)
+			// {
+			// 	int saveIndex = index;
+			// 	c = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	int size = c->size;
+			// 	std::cout << "#Chuck" << std::endl;
+			// 	std::cout << "\tid : " << std::hex << c->id << std::dec << std::endl;
+			// 	std::cout << "\tsize : " << c->size << std::endl;
+			// 	chuck *c2 = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	std::cout << "\t#Chuck" << std::endl;
+			// 	std::cout << "\t\tid : " << std::hex << c2->id << std::dec << std::endl;
+			// 	std::cout << "\t\tsize : " << c2->size << std::endl;
+			// 	index += c2->size - sizeof(chuck);
+			// 	chuck *c3 = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	std::cout << "\t#Chuck" << std::endl;
+			// 	std::cout << "\t\tid : " << std::hex << c3->id << std::dec << std::endl;
+			// 	std::cout << "\t\tsize : " << c3->size << std::endl;
+			// 	chuck *c4 = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	std::cout << "\t\t#Chuck" << std::endl;
+			// 	std::cout << "\t\t\tid : " << std::hex << c4->id << std::dec << std::endl;
+			// 	std::cout << "\t\t\tsize : " << c4->size << std::endl;
+			// 	index += c4->size - sizeof(chuck);
+			// 	chuck *c5 = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	std::cout << "\t\t#Chuck" << std::endl;
+			// 	std::cout << "\t\t\tid : " << std::hex << c5->id << std::dec << std::endl;
+			// 	std::cout << "\t\t\tsize : " << c5->size << std::endl;
+			// 	int i = index;
+			// 	for (; i < len; ++i) {
+			// 		if (buffer[i] == 0)
+			// 			break ;
+			// 	}
+			// 	std::string name(buffer + index, i - index);
+			// 	Mesh *m = new Mesh();
+			// 	std::cout << "name : \"" << name << "\"" << std::endl;
+			// 	Mesh::registerMesh(name, m);
+			// 	std::cout << "\t\t\tobject name : " << name << std::endl;
+			// 	index = i + 1;
+			// 	chuck *c6 = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	std::cout << "\t\t\t#Chuck" << std::endl;
+			// 	std::cout << "\t\t\t\tid : " << std::hex << c6->id << std::dec << std::endl;
+			// 	std::cout << "\t\t\t\tsize : " << c6->size << std::endl;
+			// 	chuck *c7 = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	std::cout << "\t\t\t\t#Chuck" << std::endl;
+			// 	std::cout << "\t\t\t\t\tid : " << std::hex << c7->id << std::dec << std::endl;
+			// 	std::cout << "\t\t\t\t\tsize : " << c7->size << std::endl;
+			// 	uint16_t nbVertices = ResourcesManager::_read<uint16_t>(buffer, index);
+			// 	std::cout << "\t\t\t\t\t\tnb vertices : " << nbVertices << std::endl;
+			// 	for (uint16_t j = 0; j < nbVertices; ++j)
+			// 	{
+			// 		float	x = ResourcesManager::_read<float>(buffer, index);
+			// 		float	y = ResourcesManager::_read<float>(buffer, index);
+			// 		float	z = ResourcesManager::_read<float>(buffer, index);
+			// 		m->vertices().push_back(vec3(x, y, z));
+			// 		std::cout << "\t\t\t\t\t\tV (" << x << ", " << y << ", " << z << ")" << std::endl;
+			// 	}
+			// 	chuck *c8 = ResourcesManager::_read_struct<chuck>(buffer, index);
+			// 	std::cout << "\t\t\t\t#Chuck" << std::endl;
+			// 	std::cout << "\t\t\t\t\tid : " << std::hex << c8->id << std::dec << std::endl;
+			// 	std::cout << "\t\t\t\t\tsize : " << c8->size << std::endl;
+			// 	uint16_t nbPolygon = ResourcesManager::_read<uint16_t>(buffer, index);
+			// 	std::cout << "\t\t\t\t\t\tnb poly : " << nbPolygon << std::endl;
+			// 	for (uint16_t j = 0; j < nbPolygon; ++j)
+			// 	{
+			// 		uint16_t vA = ResourcesManager::_read<uint16_t>(buffer, index);
+			// 		uint16_t vB = ResourcesManager::_read<uint16_t>(buffer, index);
+			// 		uint16_t vC = ResourcesManager::_read<uint16_t>(buffer, index);
+			// 		m->indices().push_back(vA);
+			// 		m->indices().push_back(vB);
+			// 		m->indices().push_back(vC);
+			// 		uint16_t faceInto = ResourcesManager::_read<uint16_t>(buffer, index);
+			// 		std::cout << "\t\t\t\t\t\tF (" << vA << ", " << vB << ", " << vC << ") - into : " << faceInto << std::endl;
+			// 	}
 				
-				break ;
-				index =  saveIndex + size;
-			}
-			delete [] buffer;
+			// 	break ;
+			// 	index =  saveIndex + size;
+			// }
+			// delete [] buffer;
 		}
 	}
 	return (true);
