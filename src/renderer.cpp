@@ -33,8 +33,10 @@ void	Renderer::init() const noexcept
 #ifdef __APPLE__
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #endif
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, (this->_double_buffer) ? 1 : 0);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, this->_depth);
+    glGetString(GL_VERSION);
 }
 
 SDL_GLContext	Renderer::createContext(SDL_Window *win) const noexcept
@@ -56,6 +58,8 @@ SDL_GLContext	Renderer::createContext(SDL_Window *win) const noexcept
 			return (0);
 		}
 		Renderer::_glew_init = true;
+		glEnable(GL_DEPTH_TEST);
+		std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 	}
 	return (context);
 }
@@ -79,6 +83,7 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 	if (!shad.isLoad())
 	{
 		shad.setLocation(0, "position");
+		shad.setLocation(1, "normal");
 		if (!shad.load())
 			return (false);
 		projection.perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
@@ -108,7 +113,7 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 
 	// glm::mat4 	proj = (glm::mat4)glm::perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
 	// mod = (glm::mat4)glm::translate(mod, glm::vec3(2, 0, 0));
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// GLuint vbo;
 	// GLuint vbo2;
 	// glGenBuffers(1, &vbo2);

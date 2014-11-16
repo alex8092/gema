@@ -18,16 +18,30 @@ void	Parser3DS::_parse_face_list(_chuck *c) noexcept
 	size_t 		i = sizeof(_chuck);
 	uint16_t	nb = Parser::_read<uint16_t>(this->_buffer + index, i);
 	std::cout << "\tnb : " << nb << std::endl;
+	std::vector<vec3>	new_vertices;
 	for (uint16_t j = 0; j < nb; ++j) {
 		uint16_t a = Parser::_read<uint16_t>(this->_buffer + index, i);
 		uint16_t b = Parser::_read<uint16_t>(this->_buffer + index, i);
 		uint16_t c = Parser::_read<uint16_t>(this->_buffer + index, i);
 		uint16_t into = Parser::_read<uint16_t>(this->_buffer + index, i);
-		std::cout << "\tFace (" << a << ", " << b << ", " << c << ") : into => " << into << std::endl;
+		// std::cout << "\tFace (" << a << ", " << b << ", " << c << ") : into => " << into << std::endl;
+		vec3 va = this->_current->vertices()[a];
+		vec3 vb = this->_current->vertices()[b];
+		vec3 vc = this->_current->vertices()[c];
+		vec3 vab = vb.add(va.negate());
+		vec3 vac = vc.add(va.negate());
+		vec3 normal = vec3::cross(vab, vac);
 		this->_current->indices().push_back(a);
+		new_vertices.push_back(this->_current->vertices()[a]);
+		this->_current->normals().push_back(normal.normalize());
+		new_vertices.push_back(this->_current->vertices()[b]);
+		this->_current->normals().push_back(normal.normalize());
+		new_vertices.push_back(this->_current->vertices()[c]);
+		this->_current->normals().push_back(normal.normalize());
 		this->_current->indices().push_back(b);
 		this->_current->indices().push_back(c);
 	}
+	this->_current->vertices() = new_vertices;
 }
 
 void	Parser3DS::_parse_vertex_list(_chuck *c) noexcept
@@ -41,7 +55,7 @@ void	Parser3DS::_parse_vertex_list(_chuck *c) noexcept
 		float x = Parser::_read<float>(this->_buffer + index, i);
 		float y = Parser::_read<float>(this->_buffer + index, i);
 		float z = Parser::_read<float>(this->_buffer + index, i);
-		std::cout << "\tVertex (" << x << ", " << y << ", " << z << ")" << std::endl;
+		// std::cout << "\tVertex (" << x << ", " << y << ", " << z << ")" << std::endl;
 		this->_current->vertices().push_back(vec3(x, y, z));
 	}
 }
@@ -57,6 +71,8 @@ void	Parser3DS::_parse_triangular(_chuck *c) noexcept
 			this->_parse_vertex_list(child);
 		else if (child->id == 0x4120)
 			this->_parse_face_list(child);
+		else
+			std::cout << "unknow parse : " << std::hex << child->id << std::dec << std::endl;
 		i += child->len;
 	}
 }

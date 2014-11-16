@@ -27,7 +27,7 @@ namespace Gema
 		uint32_t						_width = 800;
 		uint32_t						_height = 600;
 		int32_t							_major_version = 3;
-		int32_t							_minor_version = 1;
+		int32_t							_minor_version = 3;
 		uint32_t						_depth = 24;
 		bool							_double_buffer = true;
 		Scene							_scene;

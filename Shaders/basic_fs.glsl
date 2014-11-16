@@ -1,10 +1,10 @@
-#version 150 core
+#version 330
 
-in vec3 color;
+in vec4 color;
 
-out vec4 outColor;
+out vec4 outputColor;
 
-void	main(void)
+void	main()
 {
-	outColor = vec4(color, 1.0);
+	outputColor = color;
 }

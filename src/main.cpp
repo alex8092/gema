@@ -38,6 +38,8 @@ int	main(void)
 
 	Gema::ResourcesManager::singleton()->addFile("media/untitled.obj");
 	Gema::ResourcesManager::singleton()->addFile("media/untitled.3ds");
+	Gema::ResourcesManager::singleton()->addFile("media/untitled2.3ds");
+	Gema::ResourcesManager::singleton()->addFile("media/untitled3.3ds");
 	if (eng.init("Gema Engine"))
 	{
 		// return (0);

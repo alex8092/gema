@@ -16,28 +16,44 @@ void	Mesh::draw() noexcept
 			vertices[i * 3] = it.x();
 			vertices[i * 3 + 1] = it.y();
 			vertices[i * 3 + 2] = it.z();
-			std::cout << "mesh : (" << it.x() << ", " << it.y() << ", " << it.z() << ")" << std::endl; 
+			// std::cout << "mesh : (" << it.x() << ", " << it.y() << ", " << it.z() << ")" << std::endl; 
 			++i;
 		}
-		for (auto it2 : this->_indices)
+		float 	normals[this->_normals.size() * 3];
+		i = 0;
+		for (auto it : this->_normals)
 		{
-			std::cout << "indice (" << it2 << ")" << std::endl;
+			normals[i * 3] = it.x();
+			normals[i * 3 + 1] = it.y();
+			normals[i * 3 + 2] = it.z();
+			// std::cout << "mesh normale : (" << it.x() << ", " << it.y() << ", " << it.z() << ")" << std::endl; 
+			++i;
 		}
-		glGenBuffers(2, this->_vbo);
+		// for (auto it2 : this->_indices)
+		// {
+		// 	std::cout << "indice (" << it2 << ")" << std::endl;
+		// }
+		glGenBuffers(3, this->_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, this->_vbo[0]);
 		glBufferData(GL_ARRAY_BUFFER, this->_vertices.size() * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, this->_vbo[2]);
+		glBufferData(GL_ARRAY_BUFFER, this->_normals.size() * 3 * sizeof(float), normals, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbo[1]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_indices.size() * sizeof(uint32_t), this->_indices.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbo[1]);
+		// glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_indices.size() * sizeof(uint32_t), this->_indices.data(), GL_STATIC_DRAW);
+		// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		this->_is_build = true;
 	}
+	glBindBuffer(GL_ARRAY_BUFFER, this->_vbo[2]);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbo[1]);
+	glDrawArrays(GL_TRIANGLES, 0, this->_vertices.size() * 3);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbo[1]);
 	// if (this->_draw_type == GL_TRIANGLES)
-		glDrawElements(GL_TRIANGLES, this->_indices.size(), GL_UNSIGNED_INT, (void *)0);
+		// glDrawElements(GL_TRIANGLES, this->_indices.size(), GL_UNSIGNED_INT, (void *)0);
 	// else
 	// {
 	// 	for (uint32_t i = 0; i < this->_indices.size() / 4; ++i)
@@ -46,7 +62,8 @@ void	Mesh::draw() noexcept
 	// 		glDrawRangeElements(GL_TRIANGLES, i * 4 + 1, i * 4 + 4, 3, GL_UNSIGNED_INT, (void *)0);
 	// 	}
 	// }
+	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
