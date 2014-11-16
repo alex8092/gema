@@ -36,8 +36,11 @@ int	main(void)
 	InputHandler	input;
 	Gema::Engine 	eng;
 
+	Gema::ResourcesManager::singleton()->addFile("media/untitled.obj");
+	Gema::ResourcesManager::singleton()->addFile("media/untitled.3ds");
 	if (eng.init("Gema Engine"))
 	{
+		// return (0);
 		eng.input()->addListener(&input);
 		if (!eng.start())
 		{

@@ -2,6 +2,7 @@
 
 using Gema::Engine;
 using Gema::Window;
+using Gema::ResourcesManager;
 
 Engine::Engine() :
 	_render(this)
@@ -22,6 +23,7 @@ bool	Engine::init(const std::string& appName) noexcept
 		this->_win->centerCursor();
 		// this->_win->setFullscreen();
 		this->_input.addListener(this->_render.camera());
+		ResourcesManager::singleton()->load();
 	}
 	return (true);
 }

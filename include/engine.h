@@ -4,6 +4,7 @@
 # include "window.h"
 # include "renderer.h"
 # include "input.h"
+# include "resourcesmanager.h"
 # include <stdint.h>
 # include <string>
 

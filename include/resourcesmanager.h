@@ -3,6 +3,9 @@
 
 # include <string>
 # include <vector>
+# include <fstream>
+# include <sstream>
+# include <iostream>
 
 namespace Gema
 {
@@ -12,15 +15,35 @@ namespace Gema
 		explicit 					ResourcesManager() = default;
 		static ResourcesManager 	_singleton;
 		std::vector<std::string>	_paths;
+		std::vector<std::string>	_files;
+
+		template <class T, class Tmp = T>
+		static T	_read(char *buffer, int& index) noexcept {
+			index += sizeof(T);
+			return ((T)*(Tmp*)(buffer + index - sizeof(T)));
+		}
+		template <class T>
+		static T	*_read_struct(char *buffer, int& index) noexcept {
+			index += sizeof(T);
+			return ((T*)(buffer + index - sizeof(T)));
+		}
 
 	public:
-		virtual						~ResourcesManager() noexcept;
+		virtual							~ResourcesManager() noexcept;
 
-		inline void					addPath(const std::string& path) noexcept {
+		static inline ResourcesManager 	*singleton() noexcept {
+			return (&ResourcesManager::_singleton);
+		}
+
+		inline void						addPath(const std::string& path) noexcept {
 			this->_paths.push_back(path);
 		}
 
-		bool						load() noexcept;
+		inline void						addFile(const std::string& file) noexcept {
+			this->_files.push_back(file);
+		}
+
+		bool							load() noexcept;
 	};
 }
 

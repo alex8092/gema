@@ -12,5 +12,6 @@
 # include "window.h"
 # include "renderer.h"
 # include "input.h"
+# include "resourcesmanager.h"
 
 #endif

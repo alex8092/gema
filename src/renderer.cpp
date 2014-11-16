@@ -70,7 +70,7 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 	static Shader	shad("Shaders/basic_vs.glsl", "Shaders/basic_fs.glsl");
 	static mat4		modelview, projection;
 	static float 	ang = 0.001;
-	static Mesh		mesh;
+	static Mesh		*mesh = nullptr;
 
 	uint32_t		current = SDL_GetTicks();
 	this->_diff_time = current - this->_last_ticks;
@@ -82,12 +82,18 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 		if (!shad.load())
 			return (false);
 		projection.perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
-		mesh.vertices().push_back(vec3(-0.5, 0, 0.5));
-		mesh.vertices().push_back(vec3(0, 0.5, 0));
-		mesh.vertices().push_back(vec3(0.5, 0, -0.5));
-		mesh.indices().push_back(0);
-		mesh.indices().push_back(1);
-		mesh.indices().push_back(2);
+		// mesh = new Mesh();
+		// mesh->vertices().push_back(vec3(0, 0, 0));
+		// mesh->vertices().push_back(vec3(1, 0, 0));
+		// mesh->vertices().push_back(vec3(0, 1, 0));
+		// mesh->vertices().push_back(vec3(1, 1, 0));
+		// mesh->indices().push_back(0);
+		// mesh->indices().push_back(1);
+		// mesh->indices().push_back(2);
+		// mesh->indices().push_back(1);
+		// mesh->indices().push_back(2);
+		// mesh->indices().push_back(3);
+		mesh = Mesh::get("Cube");
 	}
 	this->_cam.update();
 	modelview.lookAt(this->_cam.position(), this->_cam.target(), this->_cam.up());
@@ -120,7 +126,8 @@ bool			Renderer::renderFrame(SDL_Window *win) noexcept
 	// glEnableVertexAttribArray(0);
 	// glDrawArrays(GL_TRIANGLES, 0, 3);
 	// glDisableVertexAttribArray(0);
-	mesh.draw();
+	if (mesh)
+		mesh->draw();
 	glUseProgram(0);
 	// glDisableVertexAttribArray(1);
 	// glBindBuffer(GL_ARRAY_BUFFER, 0);

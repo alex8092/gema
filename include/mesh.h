@@ -5,6 +5,7 @@
 # include <map>
 # include <vector>
 # include <stdint.h>
+# include <list>
 # include "vec3.h"
 # include <GL/glew.h>
 # define GL3_PROTOTYPES 1
@@ -20,6 +21,7 @@ namespace Gema
 		std::vector<uint32_t>				_indices;
 		bool								_is_build = false;
 		GLuint								_vbo[2];
+		GLenum								_draw_type = GL_TRIANGLES;
 
 	public:
 		explicit 					Mesh() = default;
@@ -36,11 +38,19 @@ namespace Gema
 			return (false);
 		}
 
+		static inline Mesh 			*get(const std::string& name) {
+			return (Mesh::_register_meshs[name]);
+		}
+
 		inline std::vector<vec3>&	vertices() noexcept {
 			return (this->_vertices);
 		}
 		inline std::vector<uint32_t>& indices() noexcept {
 			return (this->_indices);
+		}
+
+		inline void						setDrawType(GLenum type) noexcept {
+			this->_draw_type = type;
 		}
 
 		virtual void					draw() noexcept;
