@@ -72,6 +72,7 @@ bool	Mesh::draw() noexcept
 	{
 		l = new Light();
 		l->setPosition(vec3(-2, 2, -2));
+		l->setDiffuse(vec3(0, 1, 1));
 	}
 	if (l)
 	{
