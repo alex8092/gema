@@ -53,7 +53,7 @@ bool			Renderer::render(void) noexcept
 		mesh2 = Mesh::get("Sphere");
 	}
 	this->_cam.update();
-	this->_world.lookAt(this->_cam.position(), this->_cam.target(), this->_cam.up());
+	this->_view.lookAt(this->_cam.position(), this->_cam.target(), this->_cam.up());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (!mesh || !mesh->draw())
 		return (false);

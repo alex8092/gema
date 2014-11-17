@@ -39,7 +39,8 @@ int	main(void)
 	// Gema::ResourcesManager::singleton()->addFile("media/untitled.3ds");
 	// Gema::ResourcesManager::singleton()->addFile("media/untitled2.3ds");
 	// Gema::ResourcesManager::singleton()->addFile("media/untitled3.3ds");
-	Gema::ResourcesManager::singleton()->addFile("media/test.3ds");
+	Gema::ResourcesManager::singleton()->addFile("media/test.obj");
+	Gema::ResourcesManager::singleton()->addFile("media/test.mtl");
 	if (Gema::Engine::singleton()->init("Gema Engine"))
 	{
 		Gema::Input::singleton()->addListener(&input);

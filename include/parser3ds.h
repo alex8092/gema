@@ -11,7 +11,6 @@ namespace Gema
 	class Parser3DS : public Parser
 	{
 	private:
-		uint16_t	_to_skip[1] { 2 };
 		struct _chuck
 		{
 			uint16_t	id;

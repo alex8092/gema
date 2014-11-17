@@ -12,7 +12,7 @@ namespace Gema
 	private:
 		static std::map<std::string, Material*>	_materials;
 
-		vec3									_ambient = vec3(1.0, 1.0, 1.0);
+		vec3									_ambient = vec3(0.1, 0.1, 0.1);
 		vec3									_diffuse = vec3(1.0, 1.0, 1.0);
 		vec3									_specular = vec3(1.0, 1.0, 1.0);
 

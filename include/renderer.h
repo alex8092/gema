@@ -32,6 +32,7 @@ namespace Gema
 		double							_diff_time = 0;
 		static Renderer 				_singleton;
 		mat4							_proj;
+		mat4							_view;
 		mat4							_world;
 		explicit 						Renderer() noexcept;
 
@@ -60,6 +61,10 @@ namespace Gema
 
 		inline mat4&					projMatrix() noexcept {
 			return (this->_proj);
+		}
+
+		inline mat4&					viewMatrix() noexcept {
+			return (this->_view);
 		}
 
 		inline mat4&					worldMatrix() noexcept {

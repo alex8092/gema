@@ -1,11 +1,13 @@
 #include "mesh.h"
 #include "renderer.h"
+#include "light.h"
 #include <iostream>
 
 using Gema::Mesh;
 using Gema::Material;
 using Gema::Shader;
 using Gema::Renderer;
+using Gema::Light;
 
 std::map<std::string, Mesh *>	Mesh::_register_meshs;
 
@@ -62,13 +64,34 @@ bool	Mesh::draw() noexcept
 			return (false);
 	}
 	glUseProgram(this->_shader->id());
+	glUniformMatrix4fv(this->_shader->uniformLocation("projection"), 1, GL_FALSE, Renderer::singleton()->projMatrix().values());
+	glUniformMatrix4fv(this->_shader->uniformLocation("view"), 1, GL_FALSE, Renderer::singleton()->viewMatrix().values());
+	glUniformMatrix4fv(this->_shader->uniformLocation("model"), 1, GL_FALSE, Renderer::singleton()->worldMatrix().values());
+	static Light	*l = nullptr;
+	if (!l)
+	{
+		l = new Light();
+		l->setPosition(vec3(3, 3, 3));
+	}
+	if (l)
+	{
+		glUniform3fv(this->_shader->uniformLocation("lightPos"), 1, l->pos().values());
+		glUniform3fv(this->_shader->uniformLocation("ambientLight"), 1, l->ambient().values());
+		glUniform3fv(this->_shader->uniformLocation("diffuseLight"), 1, l->diffuse().values());
+		glUniform3fv(this->_shader->uniformLocation("specularLight"), 1, l->specular().values());
+	}
 	if (this->_material)
 	{
 		glUniform3fv(this->_shader->uniformLocation("ambient"), 1, this->_material->ambient().values());
 		glUniform3fv(this->_shader->uniformLocation("diffuse"), 1, this->_material->diffuse().values());
 		glUniform3fv(this->_shader->uniformLocation("specular"), 1, this->_material->specular().values());
-		glUniformMatrix4fv(this->_shader->uniformLocation("projection"), 1, GL_FALSE, Renderer::singleton()->projMatrix().values());
-		glUniformMatrix4fv(this->_shader->uniformLocation("modelview"), 1, GL_FALSE, Renderer::singleton()->worldMatrix().values());
+	}
+	else
+	{
+		float vals[3] = {1.0, 1.0, 1.0};
+		glUniform3fv(this->_shader->uniformLocation("ambient"), 1, vals);
+		glUniform3fv(this->_shader->uniformLocation("diffuse"), 1, vals);
+		glUniform3fv(this->_shader->uniformLocation("specular"), 1, vals);
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vbo[2]);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -77,21 +100,9 @@ bool	Mesh::draw() noexcept
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 	glDrawArrays(GL_TRIANGLES, 0, this->_vertices.size() * 3);
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbo[1]);
-	// if (this->_draw_type == GL_TRIANGLES)
-		// glDrawElements(GL_TRIANGLES, this->_indices.size(), GL_UNSIGNED_INT, (void *)0);
-	// else
-	// {
-	// 	for (uint32_t i = 0; i < this->_indices.size() / 4; ++i)
-	// 	{
-	// 		glDrawRangeElements(GL_TRIANGLES, i * 4, i * 4 + 3, 3, GL_UNSIGNED_INT, (void *)0);
-	// 		glDrawRangeElements(GL_TRIANGLES, i * 4 + 1, i * 4 + 4, 3, GL_UNSIGNED_INT, (void *)0);
-	// 	}
-	// }
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glUseProgram(0);
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	return (true);
 }
