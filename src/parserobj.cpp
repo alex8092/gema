@@ -6,7 +6,8 @@ using Gema::vec3;
 
 bool	ParserOBJ::_raw_load(char *buffer, size_t len) noexcept
 {
-	size_t	index = 0;
+//	size_t	index = 0;
+	(void)len;
 
 	this->_buffer = buffer;
 	std::stringstream ss(this->_buffer);
