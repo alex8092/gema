@@ -17,17 +17,6 @@ namespace Gema
 		std::vector<std::string>	_paths;
 		std::vector<std::string>	_files;
 
-		template <class T, class Tmp = T>
-		static T	_read(char *buffer, int& index) noexcept {
-			index += sizeof(T);
-			return ((T)*(Tmp*)(buffer + index - sizeof(T)));
-		}
-		template <class T>
-		static T	*_read_struct(char *buffer, int& index) noexcept {
-			index += sizeof(T);
-			return ((T*)(buffer + index - sizeof(T)));
-		}
-
 	public:
 		virtual							~ResourcesManager() noexcept;
 

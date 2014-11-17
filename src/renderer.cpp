@@ -5,6 +5,7 @@
 #include "vec3.h"
 #include "mesh.h"
 #include <iostream>
+#include <GLFW/glfw3.h>
 
 using Gema::Renderer;
 using Gema::Window;
@@ -16,8 +17,9 @@ using Gema::Mesh;
 
 bool	Renderer::_glew_init = false;
 
-Renderer::Renderer(Engine *engine) noexcept :
-	_engine(engine)
+Renderer 	Renderer::_singleton;
+
+Renderer::Renderer() noexcept
 {
 
 }
@@ -26,18 +28,7 @@ Renderer::~Renderer()
 {
 }
 
-void	Renderer::init() const noexcept
-{
-    #ifdef __APPLE__
-	    glfwWindowHint(GLFW_SAMPLES, 4);
-	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-	    glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	#endif
-}
-
-bool			Renderer::renderFrame(GLFWwindow *win) noexcept
+bool			Renderer::render(void) noexcept
 {
 	static Shader	shad("Shaders/basic_vs.glsl", "Shaders/basic_fs.glsl");
 	static mat4		modelview, projection;
@@ -77,6 +68,6 @@ bool			Renderer::renderFrame(GLFWwindow *win) noexcept
 	if (mesh)
 		mesh->draw();
 	glUseProgram(0);
-	glfwSwapBuffers(win);
+	Engine::singleton()->window()->swapBuffers();
 	return (true);
 }

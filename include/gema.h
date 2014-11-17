@@ -8,7 +8,6 @@
 # else
 #  include <GL/gl.h>
 # endif
-# include <GLFW/glfw3.h>
 # include "engine.h"
 # include "window.h"
 # include "renderer.h"

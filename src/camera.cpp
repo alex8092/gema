@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <GLFW/glfw3.h>
 
 using Gema::Camera;
 

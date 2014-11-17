@@ -9,8 +9,8 @@ namespace Gema
 	class Camera : public InputListener
 	{
 	private:
-		float	_phi = 0.0;
-		float	_theta = 0.0;
+		float	_phi = 50.0;
+		float	_theta = -135.0;
 		vec3	_move = vec3(0, 0, 0);
 		vec3	_forward;
 		vec3	_up = vec3(0, 1, 0);
@@ -38,11 +38,11 @@ namespace Gema
 			return (this->_up);
 		}
 
-		virtual void 	onMouseMove(int16_t xRel, int16_t yRel) noexcept;
-		virtual void 	onMousePressed(uint8_t button) noexcept;
-		virtual void 	onMouseReleased(uint8_t button) noexcept;
-		virtual bool 	onKeyPressed(int code) noexcept;
-		virtual bool 	onKeyReleased(int code) noexcept;
+		virtual void 		onMouseMove(int16_t xRel, int16_t yRel) noexcept;
+		virtual void 		onMousePressed(uint8_t button) noexcept;
+		virtual void 		onMouseReleased(uint8_t button) noexcept;
+		virtual bool 		onKeyPressed(int code) noexcept;
+		virtual bool 		onKeyReleased(int code) noexcept;
 	};
 }
 

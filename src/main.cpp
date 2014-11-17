@@ -1,5 +1,6 @@
 #include <iostream>
 #include "gema.h"
+#include <GLFW/glfw3.h>
 
 class InputHandler : public Gema::InputListener
 {
@@ -33,24 +34,23 @@ public:
 int	main(void)
 {
 	InputHandler	input;
-	Gema::Engine 	eng;
 
 	Gema::ResourcesManager::singleton()->addFile("media/untitled.obj");
 	Gema::ResourcesManager::singleton()->addFile("media/untitled.3ds");
 	Gema::ResourcesManager::singleton()->addFile("media/untitled2.3ds");
 	Gema::ResourcesManager::singleton()->addFile("media/untitled3.3ds");
-	if (eng.init("Gema Engine"))
+	if (Gema::Engine::singleton()->init("Gema Engine"))
 	{
-		eng.input()->addListener(&input);
-		if (!eng.start())
+		Gema::Input::singleton()->addListener(&input);
+		if (!Gema::Engine::singleton()->start())
 		{
-			std::cerr << eng.lastError() << std::endl;
+			std::cerr << Gema::Engine::singleton()->lastError() << std::endl;
 			return (2);
 		}
 	}
 	else
 	{
-		std::cerr << eng.lastError() << std::endl;
+		std::cerr << Gema::Engine::singleton()->lastError() << std::endl;
 		return (1);
 	}
 	return (0);

@@ -1,16 +1,19 @@
 #include "window.h"
+#include "renderer.h"
 #include "engine.h"
 #include <functional>
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using Gema::Window;
+using Gema::Renderer;
 using Gema::Engine;
 
 bool		Window::_lib_init = false;
 
-Window::Window(const std::string& name, Engine *engine) :
-	_name(name),
-	_engine(engine)
+Window::Window(const std::string& name, bool fullscreen) :
+	_fullscreen(fullscreen),
+	_name(name)
 {
 
 }
@@ -25,10 +28,9 @@ Window::~Window() noexcept
 	}
 }
 
-static void error(int error, const char *description)
-{
-	(void)error;
-	std::cerr << "error: " << description << std::endl;
+static void error(int errnumber, const char *description) {
+	(void)errnumber;
+	Engine::singleton()->setError(description);
 }
 
 bool	Window::_init_lib() noexcept
@@ -36,7 +38,12 @@ bool	Window::_init_lib() noexcept
 	glfwSetErrorCallback(error);
 	if (!glfwInit())
 		return (false);
-	this->_engine->render()->init();
+	#ifdef __APPLE__
+	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	#endif
 	return (true);
 }
 
@@ -45,11 +52,10 @@ bool	Window::_create_win() noexcept
 	if (!Window::_lib_init && !this->_init_lib())
 		return (false);
 	Window::_lib_init = true;
-	this->_engine->render()->init();
-	this->_win = glfwCreateWindow(800, 600, this->_name.c_str(), NULL /* FULLSCREEN glfwGetPrimaryMonitor() */, NULL);
+	this->_win = glfwCreateWindow(800, 600, this->_name.c_str(), (!this->_fullscreen) ? NULL : glfwGetPrimaryMonitor(), NULL);
 	if (!this->_win)
 		return (false);
-	glfwMakeContextCurrent(this->_win);
+	glfwMakeContextCurrent((GLFWwindow *)this->_win);
 	return (true);
 }
 
@@ -60,27 +66,26 @@ bool	Window::show() noexcept
 	return (this->_win);
 }
 
-bool	Window::hide() noexcept
-{
-	return (true);
-}
-
 void	Window::close() noexcept
 {
 	if (this->_win)
 	{
-		glfwDestroyWindow(this->_win);
+		glfwDestroyWindow((GLFWwindow *)this->_win);
 		this->_win = nullptr;
 	}
 }
 
 bool	Window::update() noexcept
 {
-	return (this->_engine->render()->renderFrame(this->_win));
+	return (Renderer::singleton()->render());
 }
 
 void	Window::setFullscreen(bool full) const noexcept
 {
 	// at construct time, i've to find a way on runtime
 	(void)full;
+}
+
+void	Window::swapBuffers() const noexcept {
+	glfwSwapBuffers((GLFWwindow *)this->_win);
 }

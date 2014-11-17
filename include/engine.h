@@ -2,8 +2,6 @@
 # define GEMA_ENGINE_H
 
 # include "window.h"
-# include "renderer.h"
-# include "input.h"
 # include "resourcesmanager.h"
 # include <stdint.h>
 # include <string>
@@ -13,33 +11,32 @@ namespace Gema
 	class Engine
 	{
 	private:
-		Window		*_win = nullptr;
-		Input		_input;
-		Renderer	_render;
-		std::string	_error;
+		Window					*_win = nullptr;
+		std::string				_error;
+		explicit 				Engine();
+		static Engine			_singleton;
 
 	public:
-		explicit 			Engine();
-		virtual				~Engine() noexcept = default;
+		virtual					~Engine() noexcept = default;
 
-		inline void			setError(const std::string& error) noexcept {
+		static inline Engine	*singleton() noexcept {
+			return (&Engine::_singleton);
+		}
+
+		inline void				setError(const std::string& error) noexcept {
 			this->_error = error;
 		}
 
-		inline std::string	lastError() const noexcept {
+		inline std::string		lastError() const noexcept {
 			return (this->_error);
 		}
 
-		inline Renderer 	*render() noexcept {
-			return (&this->_render);
+		inline Window 			*window() noexcept {
+			return (this->_win);
 		}
 
-		inline Input		*input() noexcept {
-			return (&this->_input);
-		}
-
-		bool				init(const std::string& appName) noexcept;
-		bool				start() noexcept;
+		bool					init(const std::string& appName, bool fullscreen = false) noexcept;
+		bool					start() noexcept;
 	};
 }
 

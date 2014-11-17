@@ -2,7 +2,6 @@
 # define GEMA_WINDOW_H
 
 # include <GL/glew.h>
-# include <GLFW/glfw3.h>
 # include <stdint.h>
 # include <string>
 
@@ -14,34 +13,32 @@ namespace Gema
 	{
 	private:
 		static bool		_lib_init;
+		bool			_fullscreen;
 
-		GLFWwindow		*_win = nullptr;
+		void			*_win = nullptr;
 
 		std::string		_name;
-		Engine			*_engine;
 		bool			_visible = false;
 
-		bool		_init_lib() noexcept;
-
-		bool		_create_win() noexcept;
+		bool			_init_lib() noexcept;
+		bool			_create_win() noexcept;
 
 	public:
-		explicit 	Window(const std::string& name, Engine *engine);
-		virtual		~Window() noexcept;
+		explicit 		Window(const std::string& name, bool fullscreen = true);
+		virtual			~Window() noexcept;
 
-		bool		show() noexcept;
-		bool		hide() noexcept;
-		void		close() noexcept;
+		bool			show() noexcept;
+		void			close() noexcept;
+		bool			update() noexcept;
+		void			setFullscreen(bool full = true) const noexcept;
+		void			swapBuffers() const noexcept;
 
-		bool		update() noexcept;
-
-		void		setFullscreen(bool full = true) const noexcept;
-
-		inline bool	isClose() const noexcept {
-			return (this->_win == nullptr);
-		}
-		inline GLFWwindow *id() const noexcept {
+		inline void 	*id() const noexcept {
 			return (this->_win);
+		}
+
+		inline bool		isClose() const noexcept {
+			return (this->_win == nullptr);
 		}
 	};
 }
