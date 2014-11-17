@@ -8,9 +8,7 @@ namespace Gema
 	class vec3
 	{
 	private:
-		float	_x = 0;
-		float	_y = 0;
-		float	_z = 0;
+		float	_values[3] = {0, 0, 0};
 
 	public:
 		explicit 	vec3() noexcept {};
@@ -19,62 +17,66 @@ namespace Gema
 		virtual 	~vec3() noexcept = default;
 
 		inline float	x() const noexcept {
-			return (this->_x);
+			return (this->_values[0]);
 		}
 
 		inline float	y() const noexcept {
-			return (this->_y);
+			return (this->_values[1]);
 		}
 
 		inline float	z() const noexcept {
-			return (this->_z);
+			return (this->_values[2]);
 		}
 
 		inline float&	x() noexcept {
-			return (this->_x);
+			return (this->_values[0]);
 		}
 
 		inline float&	y() noexcept {
-			return (this->_y);
+			return (this->_values[1]);
 		}
 
 		inline float&	z() noexcept {
-			return (this->_z);
+			return (this->_values[2]);
 		}
 
 		inline double	magnitude() const noexcept {
-			return (sqrt(this->_x * this->_x + this->_y * this->_y + this->_z * this->_z));
+			return (sqrt(this->_values[0] * this->_values[0] + this->_values[1] * this->_values[1] + this->_values[2] * this->_values[2]));
 		}
 
 		inline vec3 			normalize() const noexcept {
 			double magn = this->magnitude();
 			if (magn != 0)
-				return vec3(this->_x / magn, this->_y / magn, this->_z / magn);
+				return vec3(this->_values[0] / magn, this->_values[1] / magn, this->_values[2] / magn);
 			return (*this);
 		}
 
 		inline vec3				negate() const noexcept {
-			return vec3(-this->_x, -this->_y, -this->_z);
+			return vec3(-this->_values[0], -this->_values[1], -this->_values[2]);
 		}
 
 		inline vec3				add(const vec3& vec) const noexcept {
-			return vec3(this->_x + vec._x, this->_y + vec._y, this->_z + vec._z);
+			return vec3(this->_values[0] + vec._values[0], this->_values[1] + vec._values[1], this->_values[2] + vec._values[2]);
 		}
 
 		inline vec3 			mul(float n) const noexcept {
-			return vec3(this->_x * n, this->_y * n, this->_z * n);
+			return vec3(this->_values[0] * n, this->_values[1] * n, this->_values[2] * n);
 		}
 
 		inline double			dot(const vec3& vec) const noexcept {
-			return (this->_x * vec._x + this->_y * vec._y + this->_z * vec._z);
+			return (this->_values[0] * vec._values[0] + this->_values[1] * vec._values[1] + this->_values[2] * vec._values[2]);
 		}
 
 		static inline vec3 			cross(const vec3& v1, const vec3& v2) noexcept {
 			return vec3(
-				v1._y * v2._z - v1._z * v2._y,
-				v1._z * v2._x - v1._x * v2._z,
-				v1._x * v2._y - v1._y * v2._x
+				v1._values[1] * v2._values[2] - v1._values[2] * v2._values[1],
+				v1._values[2] * v2._values[0] - v1._values[0] * v2._values[2],
+				v1._values[0] * v2._values[1] - v1._values[1] * v2._values[0]
 			);
+		}
+
+		inline const float			*values() const noexcept {
+			return (this->_values);
 		}
 	};
 }

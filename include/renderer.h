@@ -14,6 +14,7 @@
 
 # include "scene.h"
 # include "camera.h"
+# include "mat4.h"
 
 namespace Gema
 {
@@ -30,6 +31,8 @@ namespace Gema
 		double							_last_ticks = 0;
 		double							_diff_time = 0;
 		static Renderer 				_singleton;
+		mat4							_proj;
+		mat4							_world;
 		explicit 						Renderer() noexcept;
 
 	public:
@@ -53,6 +56,14 @@ namespace Gema
 		}
 		inline Camera					*camera() noexcept {
 			return (&this->_cam);
+		}
+
+		inline mat4&					projMatrix() noexcept {
+			return (this->_proj);
+		}
+
+		inline mat4&					worldMatrix() noexcept {
+			return (this->_world);
 		}
 
 		inline double					DiffSinceLastFrame() const noexcept {

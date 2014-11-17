@@ -1,14 +1,25 @@
 #include "mesh.h"
+#include "renderer.h"
 #include <iostream>
 
 using Gema::Mesh;
+using Gema::Material;
+using Gema::Shader;
+using Gema::Renderer;
 
 std::map<std::string, Mesh *>	Mesh::_register_meshs;
 
-void	Mesh::draw() noexcept
+bool	Mesh::draw() noexcept
 {
 	if (!this->_is_build)
 	{
+		if (!this->_shader)
+		{
+			this->_shader = new Shader("Shaders/basic_vs.glsl", "Shaders/basic_fs.glsl");
+			this->_shader->load();
+		}
+		if (!this->_shader || !this->_shader->isLoad())
+			return (false);
 		float	vertices[this->_vertices.size() * 3];
 		int i = 0;
 		for (auto it : this->_vertices)
@@ -44,6 +55,21 @@ void	Mesh::draw() noexcept
 		// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		this->_is_build = true;
 	}
+	if (!this->_material && !this->_material_name.empty())
+	{
+		this->_material = Material::get(this->_material_name);
+		if (!this->_material)
+			return (false);
+	}
+	glUseProgram(this->_shader->id());
+	if (this->_material)
+	{
+		glUniform3fv(this->_shader->uniformLocation("ambient"), 1, this->_material->ambient().values());
+		glUniform3fv(this->_shader->uniformLocation("diffuse"), 1, this->_material->diffuse().values());
+		glUniform3fv(this->_shader->uniformLocation("specular"), 1, this->_material->specular().values());
+		glUniformMatrix4fv(this->_shader->uniformLocation("projection"), 1, GL_FALSE, Renderer::singleton()->projMatrix().values());
+		glUniformMatrix4fv(this->_shader->uniformLocation("modelview"), 1, GL_FALSE, Renderer::singleton()->worldMatrix().values());
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vbo[2]);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
@@ -65,5 +91,7 @@ void	Mesh::draw() noexcept
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glUseProgram(0);
 	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	return (true);
 }

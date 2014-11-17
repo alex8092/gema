@@ -7,6 +7,8 @@
 # include <stdint.h>
 # include <list>
 # include "vec3.h"
+# include "material.h"
+# include "shader.h"
 # include <GL/glew.h>
 # define GL3_PROTOTYPES 1
 # include <GL/gl.h>
@@ -23,6 +25,9 @@ namespace Gema
 		bool								_is_build = false;
 		GLuint								_vbo[3];
 		GLenum								_draw_type = GL_TRIANGLES;
+		Material 							*_material;
+		std::string							_material_name;
+		Shader								*_shader;
 
 	public:
 		explicit 					Mesh() = default;
@@ -52,12 +57,16 @@ namespace Gema
 		inline std::vector<vec3>&	normals() noexcept {
 			return (this->_normals);
 		}
-
+		inline void						setMaterialName(const std::string& name) noexcept {
+			this->_material_name = name;
+			if (this->_material != nullptr)
+				this->_material = nullptr;
+		}
 		inline void						setDrawType(GLenum type) noexcept {
 			this->_draw_type = type;
 		}
 
-		virtual void					draw() noexcept;
+		virtual bool					draw() noexcept;
 	};
 }
 

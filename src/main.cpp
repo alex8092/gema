@@ -5,7 +5,7 @@
 class InputHandler : public Gema::InputListener
 {
 public:
-	virtual void onMouseMove(int16_t , int16_t ) noexcept
+	virtual void onMouseMove(double , double ) noexcept
 	{
 		// std::cout << "mouse xrel : " << xRel << " - yrel : " << yRel << std::endl;
 	}
@@ -35,10 +35,11 @@ int	main(void)
 {
 	InputHandler	input;
 
-	Gema::ResourcesManager::singleton()->addFile("media/untitled.obj");
-	Gema::ResourcesManager::singleton()->addFile("media/untitled.3ds");
-	Gema::ResourcesManager::singleton()->addFile("media/untitled2.3ds");
-	Gema::ResourcesManager::singleton()->addFile("media/untitled3.3ds");
+	// Gema::ResourcesManager::singleton()->addFile("media/untitled.obj");
+	// Gema::ResourcesManager::singleton()->addFile("media/untitled.3ds");
+	// Gema::ResourcesManager::singleton()->addFile("media/untitled2.3ds");
+	// Gema::ResourcesManager::singleton()->addFile("media/untitled3.3ds");
+	Gema::ResourcesManager::singleton()->addFile("media/test.3ds");
 	if (Gema::Engine::singleton()->init("Gema Engine"))
 	{
 		Gema::Input::singleton()->addListener(&input);

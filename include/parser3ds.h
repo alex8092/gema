@@ -3,6 +3,7 @@
 
 # include "parser.h"
 # include "mesh.h"
+# include "material.h"
 # include <iostream>
 
 namespace Gema
@@ -19,6 +20,8 @@ namespace Gema
 
 		char			*_buffer = nullptr;
 		Mesh			*_current = nullptr;
+		Material		*_current_material = nullptr;
+		std::string		_material_name;
 
 		std::string		_read_name(char *buffer) noexcept;
 
@@ -26,6 +29,13 @@ namespace Gema
 			return ((_chuck*)(this->_buffer + index));
 		}
 
+		void			_parse_material_color(_chuck *c, int type) noexcept;
+		void			_parse_material_specular(_chuck *c) noexcept;
+		void			_parse_material_diffuse(_chuck *c) noexcept;
+		void			_parse_material_ambient(_chuck *c) noexcept;
+		void			_parse_material_name(_chuck *c) noexcept;
+		void			_parse_material(_chuck *c) noexcept;
+		void			_parse_face_material(_chuck *c) noexcept;
 		void			_parse_face_list(_chuck *c) noexcept;
 		void			_parse_vertex_list(_chuck *c) noexcept;
 		void			_parse_triangular(_chuck *c) noexcept;

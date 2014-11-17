@@ -30,10 +30,7 @@ Renderer::~Renderer()
 
 bool			Renderer::render(void) noexcept
 {
-	static Shader	shad("Shaders/basic_vs.glsl", "Shaders/basic_fs.glsl");
-	static mat4		modelview, projection;
-	static float 	ang = 0.001;
-	static Mesh		*mesh = nullptr;
+	static Mesh		*mesh = nullptr, *mesh2 = nullptr;
 
 	double		current = glfwGetTime();
 	this->_diff_time = current - this->_last_ticks;
@@ -49,25 +46,19 @@ bool			Renderer::render(void) noexcept
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	if (!shad.isLoad())
+	if (mesh == nullptr)
 	{
-		if (!shad.load())
-			return (false);
-		projection.perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
+		this->_proj.perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
 		mesh = Mesh::get("Cube");
+		mesh2 = Mesh::get("Sphere");
 	}
 	this->_cam.update();
-	modelview.lookAt(this->_cam.position(), this->_cam.target(), this->_cam.up());
-	ang += 0.01;
-	if (ang > 3.14)
-		ang = 0.01;
+	this->_world.lookAt(this->_cam.position(), this->_cam.target(), this->_cam.up());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(shad.id());
-	glUniformMatrix4fv(shad.uniformLocation("projection"), 1, GL_FALSE, projection.values());
-	glUniformMatrix4fv(shad.uniformLocation("modelview"), 1, GL_FALSE, modelview.values());
-	if (mesh)
-		mesh->draw();
-	glUseProgram(0);
+	if (!mesh || !mesh->draw())
+		return (false);
+	if (!mesh2 || !mesh2->draw())
+		return (false);
 	Engine::singleton()->window()->swapBuffers();
 	return (true);
 }

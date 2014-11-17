@@ -38,7 +38,7 @@ namespace Gema
 			return (this->_up);
 		}
 
-		virtual void 		onMouseMove(int16_t xRel, int16_t yRel) noexcept;
+		virtual void 		onMouseMove(double xRel, double yRel) noexcept;
 		virtual void 		onMousePressed(uint8_t button) noexcept;
 		virtual void 		onMouseReleased(uint8_t button) noexcept;
 		virtual bool 		onKeyPressed(int code) noexcept;

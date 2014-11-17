@@ -10,7 +10,7 @@ namespace Gema
 {
 	struct InputListener
 	{
-		virtual	void	onMouseMove(int16_t xRel, int16_t yRel) noexcept = 0;
+		virtual	void	onMouseMove(double xRel, double yRel) noexcept = 0;
 		virtual	void	onMousePressed(uint8_t button) noexcept = 0;
 		virtual void	onMouseReleased(uint8_t button) noexcept = 0;
 		virtual bool	onKeyPressed(int code) noexcept = 0;

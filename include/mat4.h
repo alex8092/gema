@@ -8,7 +8,7 @@ namespace Gema
 	class mat4
 	{
 	private:
-		float	_values[16];
+		float						_values[16];
 
 	public:
 		explicit 					mat4() noexcept;

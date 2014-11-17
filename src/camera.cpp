@@ -16,7 +16,7 @@ void	Camera::update() noexcept
 	this->_look = this->_pos.add(this->_forward);
 }
 
-void 	Camera::onMouseMove(int16_t xRel, int16_t yRel) noexcept
+void 	Camera::onMouseMove(double xRel, double yRel) noexcept
 {
 	this->_phi += -yRel * this->_sensitivity;
 	this->_theta += -xRel * this->_sensitivity;
