@@ -10,7 +10,7 @@ using Gema::ParserOBJ;
 
 ResourcesManager 	ResourcesManager::_singleton;
 
-ResourcesManager::~ResourcesManager()
+ResourcesManager::~ResourcesManager() noexcept
 {
 	
 }

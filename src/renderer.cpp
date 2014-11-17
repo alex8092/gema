@@ -24,7 +24,7 @@ Renderer::Renderer() noexcept
 
 }
 
-Renderer::~Renderer()
+Renderer::~Renderer() noexcept
 {
 }
 
