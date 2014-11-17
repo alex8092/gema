@@ -48,26 +48,26 @@ void 	Camera::onMouseReleased(uint8_t button) noexcept
 	(void)button;
 }
 
-bool 	Camera::onKeyPressed(SDL_Scancode code) noexcept
+bool 	Camera::onKeyPressed(int code) noexcept
 {
 	switch(code)
 	{
-		case SDL_SCANCODE_W:
+		case GLFW_KEY_W:
 		{
 			this->_move.z() += 1;
 			break ;
 		}
-		case SDL_SCANCODE_S:
+		case GLFW_KEY_S:
 		{
 			this->_move.z() -= 1;
 			break ;
 		}
-		case SDL_SCANCODE_A:
+		case GLFW_KEY_A:
 		{
 			this->_move.x() -= 1;
 			break ;
 		}
-		case SDL_SCANCODE_D:
+		case GLFW_KEY_D:
 		{
 			this->_move.x() += 1;
 			break ;
@@ -78,26 +78,26 @@ bool 	Camera::onKeyPressed(SDL_Scancode code) noexcept
 	return (true);
 }
 
-bool 	Camera::onKeyReleased(SDL_Scancode code) noexcept
+bool 	Camera::onKeyReleased(int code) noexcept
 {
 	switch(code)
 	{
-		case SDL_SCANCODE_W:
+		case GLFW_KEY_W:
 		{
 			this->_move.z() -= 1;
 			break ;
 		}
-		case SDL_SCANCODE_S:
+		case GLFW_KEY_S:
 		{
 			this->_move.z() += 1;
 			break ;
 		}
-		case SDL_SCANCODE_A:
+		case GLFW_KEY_A:
 		{
 			this->_move.x() += 1;
 			break ;
 		}
-		case SDL_SCANCODE_D:
+		case GLFW_KEY_D:
 		{
 			this->_move.x() -= 1;
 			break ;

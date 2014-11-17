@@ -4,29 +4,28 @@
 class InputHandler : public Gema::InputListener
 {
 public:
-	virtual void onMouseMove(int16_t xRel, int16_t yRel) noexcept
+	virtual void onMouseMove(int16_t , int16_t ) noexcept
 	{
-		std::cout << "mouse xrel : " << xRel << " - yrel : " << yRel << std::endl;
+		// std::cout << "mouse xrel : " << xRel << " - yrel : " << yRel << std::endl;
 	}
-	virtual void onMousePressed(uint8_t button) noexcept
+	virtual void onMousePressed(uint8_t ) noexcept
 	{
-		std::cout << "Button down : " << button << std::endl;
-	}
-
-	virtual void onMouseReleased(uint8_t button) noexcept
-	{
-		std::cout << "Button up : " << button << std::endl;
+		// std::cout << "Button down : " << button << std::endl;
 	}
 
-	virtual bool onKeyPressed(SDL_Scancode code) noexcept
+	virtual void onMouseReleased(uint8_t ) noexcept
 	{
-		if (code == SDL_SCANCODE_ESCAPE)
+		// std::cout << "Button up : " << button << std::endl;
+	}
+
+	virtual bool onKeyPressed(int code) noexcept
+	{
+		if (code == GLFW_KEY_ESCAPE)
 			return (false);
 		return (true);
 	}
-	virtual bool onKeyReleased(SDL_Scancode code) noexcept
+	virtual bool onKeyReleased(int ) noexcept
 	{
-		(void)code;
 		return (true);
 	}
 };
@@ -42,7 +41,6 @@ int	main(void)
 	Gema::ResourcesManager::singleton()->addFile("media/untitled3.3ds");
 	if (eng.init("Gema Engine"))
 	{
-		// return (0);
 		eng.input()->addListener(&input);
 		if (!eng.start())
 		{

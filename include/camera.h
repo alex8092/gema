@@ -41,8 +41,8 @@ namespace Gema
 		virtual void 	onMouseMove(int16_t xRel, int16_t yRel) noexcept;
 		virtual void 	onMousePressed(uint8_t button) noexcept;
 		virtual void 	onMouseReleased(uint8_t button) noexcept;
-		virtual bool 	onKeyPressed(SDL_Scancode code) noexcept;
-		virtual bool 	onKeyReleased(SDL_Scancode code) noexcept;
+		virtual bool 	onKeyPressed(int code) noexcept;
+		virtual bool 	onKeyReleased(int code) noexcept;
 	};
 }
 

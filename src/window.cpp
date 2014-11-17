@@ -1,10 +1,12 @@
 #include "window.h"
 #include "engine.h"
+#include <functional>
+#include <algorithm>
 
 using Gema::Window;
 using Gema::Engine;
 
-bool		Window::_sdl_init = false;
+bool		Window::_lib_init = false;
 
 Window::Window(const std::string& name, Engine *engine) :
 	_name(name),
@@ -16,42 +18,38 @@ Window::Window(const std::string& name, Engine *engine) :
 Window::~Window() noexcept
 {
 	this->close();
-	if (Window::_sdl_init)
+	if (Window::_lib_init)
 	{
-		SDL_Quit();
-		Window::_sdl_init = false;
+		glfwTerminate();
+		Window::_lib_init = false;
 	}
 }
 
-bool	Window::_init_sdl() noexcept
+static void error(int error, const char *description)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		this->_engine->setError(SDL_GetError());
+	(void)error;
+	std::cerr << "error: " << description << std::endl;
+}
+
+bool	Window::_init_lib() noexcept
+{
+	glfwSetErrorCallback(error);
+	if (!glfwInit())
 		return (false);
-	}
 	this->_engine->render()->init();
 	return (true);
 }
 
 bool	Window::_create_win() noexcept
 {
-	if (!Window::_sdl_init && !this->_init_sdl())
+	if (!Window::_lib_init && !this->_init_lib())
 		return (false);
-	Window::_sdl_init = true;
-	this->_win = SDL_CreateWindow(this->_name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->_engine->render()->width(), this->_engine->render()->height(), SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	Window::_lib_init = true;
+	this->_engine->render()->init();
+	this->_win = glfwCreateWindow(800, 600, this->_name.c_str(), NULL /* FULLSCREEN glfwGetPrimaryMonitor() */, NULL);
 	if (!this->_win)
-	{
-		this->_engine->setError(SDL_GetError());
 		return (false);
-	}
-	this->_visible = true;
-	this->_context = this->_engine->render()->createContext(this->_win);
-	if (!this->_context)
-	{
-		this->close();
-		return (false);
-	}
+	glfwMakeContextCurrent(this->_win);
 	return (true);
 }
 
@@ -59,21 +57,11 @@ bool	Window::show() noexcept
 {
 	if (!this->_win && !this->_create_win())
 		return (false);
-	if (this->_win && !this->_visible)
-	{
-		SDL_ShowWindow(this->_win);
-		this->_visible = true;
-	}
 	return (this->_win);
 }
 
 bool	Window::hide() noexcept
 {
-	if (this->_win && this->_visible)
-	{
-		SDL_HideWindow(this->_win);
-		this->_visible = false;
-	}
 	return (true);
 }
 
@@ -81,20 +69,9 @@ void	Window::close() noexcept
 {
 	if (this->_win)
 	{
-		this->_engine->render()->destroyContext(this->_context);
-		SDL_DestroyWindow(this->_win);
+		glfwDestroyWindow(this->_win);
 		this->_win = nullptr;
 	}
-}
-
-void	Window::centerCursor() const noexcept
-{
-	SDL_WarpMouseInWindow(this->_win, this->_engine->render()->width() / 2, this->_engine->render()->height() / 2);
-}
-
-bool	Window::isCenteredCursor(int16_t x, int16_t y) const noexcept
-{
-	return (x == (int16_t)this->_engine->render()->width() / 2 && y == (int16_t)this->_engine->render()->height() / 2);
 }
 
 bool	Window::update() noexcept
@@ -104,5 +81,6 @@ bool	Window::update() noexcept
 
 void	Window::setFullscreen(bool full) const noexcept
 {
-	SDL_SetWindowFullscreen(this->_win, (full) ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+	// at construct time, i've to find a way on runtime
+	(void)full;
 }

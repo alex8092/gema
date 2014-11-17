@@ -1,88 +1,78 @@
 #include "input.h"
+#include <iostream>
+#include <functional>
 
 using Gema::Input;
-#include <iostream>
+
+Input 			*Input::_current = nullptr;
+
+void	Input::_key_handler(GLFWwindow *win, int key, int scancode, int action, int mods)
+{
+	(void)win;
+	(void)scancode;
+	(void)mods;
+	Input *self = Input::_current;
+	bool	res = true;
+	
+	if (action == GLFW_PRESS)
+	{
+		for (auto it : self->_listeners)
+		{
+			if (!it->onKeyPressed(key))
+				res = false;
+		}
+	}
+	else if (action == GLFW_RELEASE)
+	{
+		for (auto it : self->_listeners)
+		{
+			if (!it->onKeyReleased(key))
+				res = false;
+		}
+	}
+	self->_continue = res;
+}
+
+void	Input::_mouse_move_handler(GLFWwindow *win, double x, double y)
+{
+	(void)win;
+	Input *self = Input::_current;
+	double x2 = x - self->_mouse_pos_x;
+	double y2 = y - self->_mouse_pos_y;
+	self->_mouse_pos_x = x;
+	self->_mouse_pos_y = y;
+	for (auto it : self->_listeners)
+		it->onMouseMove(x2, y2);
+}
+
+void	Input::_mouse_click_handler(GLFWwindow *win, int button, int action, int mods)
+{
+	(void)win;
+	(void)mods;
+	Input *self = Input::_current;
+	if (action == GLFW_PRESS)
+	{
+		for (auto it : self->_listeners)
+			it->onMousePressed(button);
+	}
+	else if (action == GLFW_RELEASE)
+	{
+		for (auto it : self->_listeners)
+			it->onMouseReleased(button);
+	}
+}
 
 bool	Input::capture() noexcept
 {
-	SDL_Event ev;
-
-	while (SDL_PollEvent(&ev))
+	if (!this->_glfw_handler_init)
 	{
-		switch (ev.type)
-		{
-			case SDL_WINDOWEVENT:
-			{
-				if (ev.window.event == SDL_WINDOWEVENT_CLOSE)
-					return (false);
-				break ;
-			}
-			case SDL_MOUSEMOTION:
-			{
-				if (this->_win && this->_win->isCenteredCursor(ev.motion.x, ev.motion.y) && this->_grab_cursor)
-					break ;
-				this->_mouse_pos_x = ev.motion.x;
-				this->_mouse_pos_y = ev.motion.y;
-				for (auto it : this->_listeners)
-					it->onMouseMove(ev.motion.xrel, ev.motion.yrel);
-				if (this->_win && this->_grab_cursor)
-					this->_win->centerCursor();
-				break ;
-			}
-			case SDL_KEYDOWN:
-			{
-				bool	res = true;
-				bool	isPress = false;
-				SDL_Scancode code = ev.key.keysym.scancode;
-				auto it = this->_keymap.find(code);
-				if (it == this->_keymap.end())
-					this->_keymap[code] = true;
-				else
-				{
-					isPress = it->second;
-					it->second = true;
-				}
-				if (isPress)
-				{
-					auto it2 = this->_keyrepeat.find(code);
-					if (it2 == this->_keyrepeat.end())
-						this->_keyrepeat[code] = false;
-				}
-				if (!isPress || (isPress && this->_keyrepeat[code]))
-				{
-					for (auto it : this->_listeners)
-					{
-						if (!it->onKeyPressed(code))
-							res = false;
-					}
-				}
-				return (res);
-			}
-			case SDL_KEYUP:
-			{
-				bool res = true;
-				SDL_Scancode code = ev.key.keysym.scancode;
-				this->_keymap[code] = false;
-				for (auto it : this->_listeners)
-				{
-					if (!it->onKeyReleased(code))
-						res = false;
-				}
-				return (res);
-			}
-			case SDL_MOUSEBUTTONDOWN:
-			{
-				for (auto it : this->_listeners)
-					it->onMousePressed(ev.button.button);
-				break ;
-			}
-			case SDL_MOUSEBUTTONUP:
-			{
-				for (auto it : this->_listeners)
-					it->onMouseReleased(ev.button.button);
-				break ;
-			}
-		}
+		Input::_current = this;
+		glfwSetKeyCallback(this->_win->id(), Input::_key_handler);
+		glfwSetCursorPosCallback(this->_win->id(), Input::_mouse_move_handler);
+		glfwSetMouseButtonCallback(this->_win->id(), Input::_mouse_click_handler);
+		this->_glfw_handler_init = true;
 	}
-	return (true);
+	Input::_current = this;
+	glfwPollEvents();
+	return (this->_continue);
 }

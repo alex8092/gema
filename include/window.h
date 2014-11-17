@@ -1,7 +1,8 @@
 #ifndef GEMA_WINDOW_H
 # define GEMA_WINDOW_H
 
-# include <SDL2/SDL.h>
+# include <GL/glew.h>
+# include <GLFW/glfw3.h>
 # include <stdint.h>
 # include <string>
 
@@ -12,15 +13,15 @@ namespace Gema
 	class Window
 	{
 	private:
-		static bool		_sdl_init;
+		static bool		_lib_init;
 
-		SDL_Window		*_win = nullptr;
-		SDL_GLContext	_context;
+		GLFWwindow		*_win = nullptr;
+
 		std::string		_name;
 		Engine			*_engine;
 		bool			_visible = false;
 
-		bool		_init_sdl() noexcept;
+		bool		_init_lib() noexcept;
 
 		bool		_create_win() noexcept;
 
@@ -32,16 +33,15 @@ namespace Gema
 		bool		hide() noexcept;
 		void		close() noexcept;
 
-		void		centerCursor() const noexcept;
-
-		bool		isCenteredCursor(int16_t x, int16_t y) const noexcept;
-
 		bool		update() noexcept;
 
 		void		setFullscreen(bool full = true) const noexcept;
 
 		inline bool	isClose() const noexcept {
 			return (this->_win == nullptr);
+		}
+		inline GLFWwindow *id() const noexcept {
+			return (this->_win);
 		}
 	};
 }

@@ -2,8 +2,10 @@
 # define GEMA_RENDERER_H
 
 # include <stdint.h>
-# include <SDL2/SDL.h>
 # include <GL/glew.h>
+
+# include <GLFW/glfw3.h>
+
 # define GL3_PROTOTYPES 1
 
 # ifdef __APPLE__
@@ -32,8 +34,8 @@ namespace Gema
 		bool							_double_buffer = true;
 		Scene							_scene;
 		Camera							_cam;
-		uint32_t						_last_ticks = 0;
-		uint32_t						_diff_time = 0;
+		double							_last_ticks = 0;
+		double							_diff_time = 0;
 
 	public:
 		explicit 		Renderer(Engine *engine) noexcept;
@@ -48,9 +50,7 @@ namespace Gema
 		}
 
 		void			init() const noexcept;
-		SDL_GLContext	createContext(SDL_Window *win) const noexcept;
-		void			destroyContext(SDL_GLContext context) const noexcept;
-		bool			renderFrame(SDL_Window *win) noexcept;
+		bool			renderFrame(GLFWwindow *win) noexcept;
 
 
 		inline Scene	*scene() noexcept {
@@ -60,7 +60,7 @@ namespace Gema
 			return (&this->_cam);
 		}
 
-		inline uint32_t	DiffSinceLastFrame() const noexcept {
+		inline double		DiffSinceLastFrame() const noexcept {
 			return (this->_diff_time);
 		}
 	};

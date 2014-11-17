@@ -24,6 +24,7 @@ void	Parser3DS::_parse_face_list(_chuck *c) noexcept
 		uint16_t b = Parser::_read<uint16_t>(this->_buffer + index, i);
 		uint16_t c = Parser::_read<uint16_t>(this->_buffer + index, i);
 		uint16_t into = Parser::_read<uint16_t>(this->_buffer + index, i);
+		(void)into;
 		// std::cout << "\tFace (" << a << ", " << b << ", " << c << ") : into => " << into << std::endl;
 		vec3 va = this->_current->vertices()[a];
 		vec3 vb = this->_current->vertices()[b];
