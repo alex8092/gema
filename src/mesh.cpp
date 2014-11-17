@@ -71,7 +71,7 @@ bool	Mesh::draw() noexcept
 	if (!l)
 	{
 		l = new Light();
-		l->setPosition(vec3(3, 3, 3));
+		l->setPosition(vec3(-2, 2, -2));
 	}
 	if (l)
 	{

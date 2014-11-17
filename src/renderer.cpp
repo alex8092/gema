@@ -30,7 +30,7 @@ Renderer::~Renderer()
 
 bool			Renderer::render(void) noexcept
 {
-	static Mesh		*mesh = nullptr, *mesh2 = nullptr;
+	static Mesh		*mesh = nullptr, *mesh2 = nullptr, *mesh3 = nullptr;
 
 	double		current = glfwGetTime();
 	this->_diff_time = current - this->_last_ticks;
@@ -51,6 +51,7 @@ bool			Renderer::render(void) noexcept
 		this->_proj.perspective(70.0, (double)this->_width / (double)this->_height, 1.0, 1000.0);
 		mesh = Mesh::get("Cube");
 		mesh2 = Mesh::get("Sphere");
+		mesh3 = Mesh::get("Plane");
 	}
 	this->_cam.update();
 	this->_view.lookAt(this->_cam.position(), this->_cam.target(), this->_cam.up());
@@ -58,6 +59,8 @@ bool			Renderer::render(void) noexcept
 	if (!mesh || !mesh->draw())
 		return (false);
 	if (!mesh2 || !mesh2->draw())
+		return (false);
+	if (!mesh3 || !mesh3->draw())
 		return (false);
 	Engine::singleton()->window()->swapBuffers();
 	return (true);
